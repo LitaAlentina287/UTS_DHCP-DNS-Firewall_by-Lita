@@ -59,10 +59,10 @@ Semua konfigurasi diuji pada Ubuntu Server yang dijalankan di VirtualBox/VMware/
 - Cek IP otomatis di client dengan `ip a` atau `ifconfig`  
 - Cek resolusi DNS dengan `ping server.local`, `nslookup server.local`, atau `dig server.local`  
 - Cek aturan firewall dengan `sudo iptables -L -v`
-ssh user@192.168.100.1
-curl http://192.168.100.1
-curl -k https://192.168.100.1
-ping 192.168.100.1
+`ssh user@192.168.100.1`,
+`curl http://192.168.100.1`,
+`curl -k https://192.168.100.1`,
+`ping 192.168.100.1`
 
 ---
 
