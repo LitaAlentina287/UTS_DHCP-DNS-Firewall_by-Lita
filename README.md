@@ -3,7 +3,7 @@
 **Universitas Teknologi Bandung**  
 Departemen Teknik Informatika — Kelas TIF K 23B  
 Dosen: Muchamad Rusdan, S.T., M.T.  
-Mahasiswa: [Lita Alentina] (23552011097)  
+Mahasiswa: Lita Alentina - 23552011097 
 
 ---
 
@@ -64,4 +64,4 @@ Semua konfigurasi diuji pada Ubuntu Server yang dijalankan di VirtualBox/VMware/
 
 ## Tautan  
 - [Video Dokumentasi dan Presentasi](https://youtu.be/2InAMcMxNug?si=joTvwazZQqCXnI-y)  
-- [Repositori GitHub](https://github.com/namaakun/proyek-jarkom2)  
+- [Repositori GitHub](https://github.com/LitaAlentina287/UTS_DHCP-DNS-Firewall_by-Lita.git)  
