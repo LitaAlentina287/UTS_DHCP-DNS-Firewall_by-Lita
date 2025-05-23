@@ -1,110 +1,71 @@
+# UTS Jaringan Komputer 2  
+## Konfigurasi DHCP Server, DNS Server, dan Firewall (iptables)  
+**Universitas Teknologi Bandung**  
+Departemen Teknik Informatika — Kelas TIF K 23B  
+Dosen: Muchamad Rusdan, S.T., M.T.  
+Mahasiswa: [Lita Alentina] ([23552011097])  
 
-UTS Jaringan Komputer 2 – DHCP, DNS, Firewall
-Nama: Lita Alentina
-NIM: 23552011097
-Kelas: TIF K 23 CNS
-Dosen Pengampu: Muchamad Rusdan, S.T., M.T.
-Universitas Teknologi Bandung
+---
 
-Deskripsi Praktikum
-Tujuan dari praktikum ini adalah mempelajari instalasi dan konfigurasi layanan DHCP, DNS, dan Firewall menggunakan Ubuntu Server 18.04. Sistem ini dibangun di atas simulasi dua mesin virtual (VM) dalam jaringan LAN internal menggunakan VirtualBox.
+## Deskripsi  
+Repositori ini berisi konfigurasi lengkap untuk tugas Ujian Tengah Semester (UTS) Jaringan Komputer 2, mencakup:  
+- Instalasi dan konfigurasi DHCP Server menggunakan `isc-dhcp-server`  
+- Instalasi dan konfigurasi DNS Server menggunakan `bind9`  
+- Konfigurasi firewall menggunakan `iptables`  
 
-Topologi Virtual
-[VM Server - Ubuntu Server 18.04]
-  ├─ eth0 (NAT)
-  └─ eth1 (Internal Network: 192.168.10.1)
-         │
-         └── [VM Client - Ubuntu Server/Desktop]
-               └─ eth1 (DHCP Client)
+Semua konfigurasi diuji pada Ubuntu Server yang dijalankan di VirtualBox/VMware/WSL.
 
-Instalasi Ubuntu Server & Client di VirtualBox
+---
 
-VM Server
-- Nama: Ubuntu-Server
-- OS: Ubuntu Server 18.04 (ISO: ubuntu-18.04-live-server-amd64.iso)
-- RAM: 1024 MB
-- Disk: 10 GB
-- Adapter 1: NAT
-- Adapter 2: Internal Network (intnet)
+## Struktur File  
 
-VM Client
-- Nama: Ubuntu-Client
-- OS: Ubuntu Server/Desktop 18.04
-- RAM: 1024 MB
-- Disk: 10 GB
-- Adapter 1: NAT (opsional)
-- Adapter 2: Internal Network (intnet)
+| File                         | Keterangan                                    |
+|------------------------------|-----------------------------------------------|
+| `/etc/dhcp/dhcpd.conf`        | Konfigurasi DHCP Server                        |
+| `/etc/bind/named.conf.local`  | Konfigurasi zona DNS lokal (forward & reverse)|
+| `/etc/bind/db.server.local`   | File zona forward DNS untuk domain server.local|
+| `/etc/bind/db.100`            | File zona reverse DNS untuk subnet 192.168.100.0/24|
+| `iptables.rules`              | Script konfigurasi firewall (iptables)        |
 
-Konfigurasi DHCP Server
+---
 
-File: /etc/netplan/01-netcfg.yaml
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    enp0s3:
-      dhcp4: true
-    enp0s8:
-      addresses: [192.168.10.1/24]
+## Cara Penggunaan  
 
-Perintah:
-sudo netplan apply
+1. **DHCP Server**  
+   - Instal `isc-dhcp-server`  
+   - Salin file `dhcpd.conf` ke `/etc/dhcp/`  
+   - Restart service DHCP:  
+     ```bash
+     sudo systemctl restart isc-dhcp-server
+     ```
 
-Install DHCP Server:
-sudo apt update
-sudo apt install isc-dhcp-server
+2. **DNS Server**  
+   - Instal `bind9`  
+   - Salin file konfigurasi ke `/etc/bind/`  
+   - Pastikan `named.conf.local` memuat konfigurasi zona  
+   - Restart service DNS:  
+     ```bash
+     sudo systemctl restart bind9
+     ```
 
-Konfigurasi Interface DHCP:
-File: /etc/default/isc-dhcp-server
-INTERFACESv4="enp0s8"
+3. **Firewall (iptables)**  
+   - Terapkan aturan firewall dengan:  
+     ```bash
+     sudo iptables-restore < iptables.rules
+     ```
 
-File Konfigurasi DHCP: /etc/dhcp/dhcpd.conf
-authoritative;
-default-lease-time 600;
-max-lease-time 7200;
-subnet 192.168.10.0 netmask 255.255.255.0 {
-  range 192.168.10.100 192.168.10.200;
-  option routers 192.168.10.1;
-  option subnet-mask 255.255.255.0;
-  option domain-name-servers 8.8.8.8;
-  option domain-name "server.local";
-}
+---
 
-Restart DHCP Server:
-sudo systemctl restart isc-dhcp-server
-sudo systemctl status isc-dhcp-server
+## Uji Coba  
+- Cek IP otomatis di client dengan `ip a` atau `ifconfig`  
+- Cek resolusi DNS dengan `ping server.local`, `nslookup server.local`, atau `dig server.local`  
+- Cek aturan firewall dengan `sudo iptables -L -v`
 
-Konfigurasi VM Client (Sebagai DHCP Client)
+---
 
-File: /etc/netplan/01-netcfg.yaml
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    enp0s3:
-      dhcp4: true
-    enp0s8:
-      dhcp4: true
+## Tautan  
+- [Video Dokumentasi dan Presentasi] (https://youtu.be/2InAMcMxNug?si=joTvwazZQqCXnI-y)
+- [Repositori GitHub](https://github.com/namaakun/proyek-jarkom2)  
 
-Perintah:
-sudo netplan apply
+---
 
-Verifikasi IP:
-ip a  # Cek apakah mendapat IP dari DHCP Server (misal 192.168.10.101)
-
-Tes Koneksi ke Server:
-ping 192.168.10.1
-
-File Konfigurasi yang Diunggah:
-- /etc/dhcp/dhcpd.conf
-- /etc/default/isc-dhcp-server
-- /etc/netplan/01-netcfg.yaml
-
-Catatan:
-- Server menggunakan IP statis 192.168.10.1
-- Client berhasil mendapatkan IP dari DHCP (otomatis)
-- Selanjutnya konfigurasi DNS dan Firewall akan ditambahkan
-
-Tautan Penting:
-- YouTube Video: Akan diisi setelah diunggah
-- GitHub Repository: https://github.com/namakamu/uts-jarkom-dhcp-dns-firewall
