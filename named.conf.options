@@ -1,14 +1,13 @@
 options {
-	directory "/var/cache/bind";
+    directory "/var/cache/bind";
 
-	recursion yes;
-        allow-query { any; };
+    recursion yes;
+    allow-query { any; };
 
-	dnssec-validation no;
+    dnssec-validation no;
 
-        forwarders {
-            8.8.8.8;
-            1.1.1.1;
-        };
-
-     };
+    forwarders {
+        8.8.8.8;
+        1.1.1.1;
+    };
+};
