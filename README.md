@@ -19,20 +19,20 @@ Semua konfigurasi diuji pada Ubuntu Server yang dijalankan di VirtualBox/VMware/
 
 ## Struktur File  
 
-| File                         | Keterangan                                    |
-|------------------------------|-----------------------------------------------|
-| `/etc/dhcp/dhcpd.conf`        | Konfigurasi DHCP Server                        |
-| `/etc/bind/named.conf.local`  | Konfigurasi zona DNS lokal (forward & reverse)|
-| `/etc/bind/db.server.local`   | File zona forward DNS untuk domain server.local|
-| `/etc/bind/db.100`            | File zona reverse DNS untuk subnet 192.168.100.0/24|
-| `iptables.rules`              | Script konfigurasi firewall (iptables)        |
+| File                 | Keterangan                                  |
+|----------------------|---------------------------------------------|
+| `dhcpd.conf`         | Konfigurasi DHCP Server                      |
+| `named.conf.local`   | Konfigurasi zona DNS lokal (forward & reverse)|
+| `named.conf.options` | Pengaturan opsi DNS seperti forwarders      |
+| `db.server.local`    | File zona forward DNS untuk domain server.local|
+| `db.100`             | File zona reverse DNS untuk subnet 192.168.100.0/24|
+| `firewall.rules`     | Script konfigurasi firewall (iptables)      |
 
 ---
 
 ## Cara Penggunaan  
 
 1. **DHCP Server**  
-   - Instal `isc-dhcp-server`  
    - Salin file `dhcpd.conf` ke `/etc/dhcp/`  
    - Restart service DHCP:  
      ```bash
@@ -40,9 +40,8 @@ Semua konfigurasi diuji pada Ubuntu Server yang dijalankan di VirtualBox/VMware/
      ```
 
 2. **DNS Server**  
-   - Instal `bind9`  
-   - Salin file konfigurasi ke `/etc/bind/`  
-   - Pastikan `named.conf.local` memuat konfigurasi zona  
+   - Salin file `named.conf.local` dan `named.conf.options` ke `/etc/bind/`  
+   - Salin file `db.server.local` dan `db.100` ke `/etc/bind/`  
    - Restart service DNS:  
      ```bash
      sudo systemctl restart bind9
@@ -51,7 +50,7 @@ Semua konfigurasi diuji pada Ubuntu Server yang dijalankan di VirtualBox/VMware/
 3. **Firewall (iptables)**  
    - Terapkan aturan firewall dengan:  
      ```bash
-     sudo iptables-restore < iptables.rules
+     sudo iptables-restore < firewall.rules
      ```
 
 ---
@@ -64,8 +63,5 @@ Semua konfigurasi diuji pada Ubuntu Server yang dijalankan di VirtualBox/VMware/
 ---
 
 ## Tautan  
-- [Video Dokumentasi dan Presentasi] (https://youtu.be/2InAMcMxNug?si=joTvwazZQqCXnI-y)
-- [Repositori GitHub](https://github.com/LitaAlentina287/UTS_DHCP-DNS-Firewall_by-Lita.git)  
-
----
-
+- [Video Dokumentasi dan Presentasi](https://youtu.be/2InAMcMxNug?si=joTvwazZQqCXnI-y)  
+- [Repositori GitHub](https://github.com/namaakun/proyek-jarkom2)  
